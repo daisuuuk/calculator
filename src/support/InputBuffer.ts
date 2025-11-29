@@ -64,7 +64,4 @@ export class InputBuffer {
         const t = Number(trimmed);       // number型へ またNumber()の仕様で "." はNaN
         return !isNaN(t);                    // NaNではないものを返す → NaNなので false を返す
     }
-
-
-    // trimmed === "-"　いらない？
 }

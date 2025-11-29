@@ -29,7 +29,7 @@ body {
 
 .history-one {
   position: absolute;
-  top: 10px;
+  top: 5px;
   left: 8px;
   font-size: .8rem;         
   line-height: 1;
@@ -44,7 +44,7 @@ body {
 
 .history-two {
   position: absolute;
-  top: 60px;
+  top: 31px;
   left: 8px;
   font-size: .8rem;         
   line-height: 1;
@@ -59,9 +59,9 @@ body {
 
 .history-operator {
   position: absolute;
-  top: 27px;
-  left: 8px;
-  font-size: 1.5rem;         
+  top: 12px;
+  left: 6px;
+  font-size: 1.3rem;         
   line-height: 1;
   color: white;
   opacity: 0.8;

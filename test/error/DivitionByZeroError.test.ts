@@ -4,8 +4,7 @@ import { Calculator } from "../../src/calculator/Calculator";
 import { Operation } from "../../src/constant/Operation";
 import { TOKEN_KIND } from "../../src/token/KeyToken";
 import { IDisplay } from "../../src/display/IDisplay";
-import { createDisplayMock } from "../utils/MockAndDom";
-import { setupTestDOM } from "../utils/MockAndDom";
+import { setupTestDOM, createDisplayMock, inputDigit } from "../utils/MockAndDom";
 
 describe("------------------------------DivisionByZeroError------------------------------", () => {
     let calculator: Calculator;
@@ -26,9 +25,9 @@ describe("------------------------------DivisionByZeroError---------------------
     test("ケース: デフォルトメッセージ massage「Division by zero」が使用できるか", () => {
         const error = new DivisionByZeroError();
 
-        calculator.handleDigit(7);
+        inputDigit(calculator, 7);
         calculator.handle({ kind: TOKEN_KIND.OP, value: Operation.Divide });
-        calculator.handleDigit(0);
+        inputDigit(calculator, 0);
         calculator.handle({ kind: TOKEN_KIND.EQUAL });
 
         expect(error.message).toBe("Division by zero");
@@ -40,9 +39,9 @@ describe("------------------------------DivisionByZeroError---------------------
     test("ケース: カスタムメッセージ name「DivisionByZeroError」が使用できるか", () => {
         const error = new DivisionByZeroError("0で割れません");
 
-        calculator.handleDigit(7);
+        inputDigit(calculator, 7);
         calculator.handle({ kind: TOKEN_KIND.OP, value: Operation.Divide });
-        calculator.handleDigit(0);
+        inputDigit(calculator, 0);
         calculator.handle({ kind: TOKEN_KIND.EQUAL });
 
         expect(error.message).toBe("0で割れません");
@@ -50,9 +49,9 @@ describe("------------------------------DivisionByZeroError---------------------
     });
 
     test("ケース: throw を catchできるか", () => {
-        calculator.handleDigit(7);
+        inputDigit(calculator, 7);
         calculator.handle({ kind: TOKEN_KIND.OP, value: Operation.Divide });
-        calculator.handleDigit(0);
+        inputDigit(calculator, 0);
         calculator.handle({ kind: TOKEN_KIND.EQUAL });
 
         try {

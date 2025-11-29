@@ -15,9 +15,15 @@ const ALL_BUTTONS = document.querySelectorAll("button");
  */
 ALL_BUTTONS.forEach((button) => {
     button.addEventListener("click", e => {
-        const token = mapper.resolve(e.target as HTMLElement);
-        if (token) {
+        try {
+            const token = mapper.resolve(e.target as HTMLElement);
+            if(!token) {
+                throw new Error("無効なボタンが押下されました！")
+            }
+        
             calculator.handle(token);
+        } catch(error) {
+            calculator.handleError(error);
         }
     });
 });

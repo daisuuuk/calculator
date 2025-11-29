@@ -1,7 +1,9 @@
 
 import { IDisplay } from "../../src/display/IDisplay";
+import { Calculator } from "../../src/calculator/Calculator";
+import { TOKEN_KIND } from "../../src/token/KeyToken";
 
-export function setupTestDOM() {
+export function setupTestDOM(): void {
     // テスト用に DOM を再構築
     document.body.innerHTML = `
         <div id="result"></div>
@@ -21,4 +23,9 @@ export function createDisplayMock(): jest.Mocked<IDisplay> {
         displayHistoryOperator: jest.fn(),
         displayHistoryTwo: jest.fn(),
     };
+}
+
+// なぜ： ヘルパー関数を要して、`Calculator.ts`の`private`に対応するため
+export function inputDigit(calculator: Calculator, digit: number): void {
+    calculator.handle({ kind: TOKEN_KIND.DIGIT, value: digit });
 }

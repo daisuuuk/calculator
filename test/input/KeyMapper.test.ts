@@ -45,14 +45,14 @@ describe("------------------------------KeyMapper------------------------------"
     });
 
     test("ケース: 「*」 を正しく取得できるか", () => {
-        const btn = mockButton("*");
+        const btn = mockButton("×");
         const token = mapper.resolve(btn);
 
         expect(token).toEqual({ kind: TOKEN_KIND.OP, value: Operation.Multiply });
     });
 
     test("ケース: 「/」 を正しく取得できるか", () => {
-        const btn = mockButton("/");
+        const btn = mockButton("÷");
         const token = mapper.resolve(btn);
 
         expect(token).toEqual({ kind: TOKEN_KIND.OP, value: Operation.Divide });

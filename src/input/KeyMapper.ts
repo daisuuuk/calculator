@@ -15,8 +15,8 @@ export class KeyMapper {
             this.keyMap.set(".", { kind: TOKEN_KIND.DECIMAL });
             this.keyMap.set("+", { kind: TOKEN_KIND.OP, value: Operation.Add });
             this.keyMap.set("-", { kind: TOKEN_KIND.OP, value: Operation.Subtract });
-            this.keyMap.set("*", { kind: TOKEN_KIND.OP, value: Operation.Multiply });
-            this.keyMap.set("/", { kind: TOKEN_KIND.OP, value: Operation.Divide });
+            this.keyMap.set("×", { kind: TOKEN_KIND.OP, value: Operation.Multiply });
+            this.keyMap.set("÷", { kind: TOKEN_KIND.OP, value: Operation.Divide });
             this.keyMap.set("=", { kind: TOKEN_KIND.EQUAL });
             this.keyMap.set("C", { kind: TOKEN_KIND.CLEAR });
         }

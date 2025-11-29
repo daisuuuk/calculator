@@ -26,7 +26,7 @@ export class Calculator {
   ) { }
 
   /*********************************************
-   * @file typesc/
+   * @file calculator-class/
    * @date 2025/11/15
    * @param token 押下されたボタンの値
    * @return なし
@@ -56,13 +56,13 @@ export class Calculator {
   }
 
   /*********************************************
-   * @file typesc/
+   * @file calculator-class/
    * @date 2025/11/15
    * @param num 入力された値(数字)の格納先
    * @return なし
    * @detail 押下された数値をセットする関数
    ********************************************/
-  public handleDigit(num: number): void {
+  private handleDigit(num: number): void {
 
     switch (this.state) {
       /**
@@ -109,9 +109,7 @@ export class Calculator {
        * なぜ：新計算を開始するため / 計算結果表示後（「=」押下後）に数字が押下された時
        */
       case CalcState.ResultShown: {
-        this.display.displayHistoryOne(this.buffer.clear());
-        this.display.displayHistoryOperator(this.buffer.clear());
-        this.display.displayHistoryTwo(this.buffer.clear());
+        this.historyClear();
         this.buffer.clear();
         this.operator = null;
         this.left = null;
@@ -143,13 +141,13 @@ export class Calculator {
   }
 
   /*********************************************
-   * @file typesc/
+   * @file calculator-class/
    * @date 2025/11/15
    * @param op 入力された値(演算子)の格納先
    * @return なし
    * @detail 押下された演算子をセットする関数
    ********************************************/
-  public handleOperator(op: Operation): void {
+  private handleOperator(op: Operation): void {
     // InputBufferを用いて取得した「現在の入力」 = 元currentInput 的な役割
     // 条件分岐がstring型が多いのでgetValue()
     const currentString = this.buffer.toString();
@@ -221,13 +219,13 @@ export class Calculator {
   }
 
   /*****************************************************
-   * @file typesc/
+   * @file calculator-class/
    * @date 2025/11/15
    * @param なし(void)
    * @return なし
    * @detail ２つの入力値を受け取り四則演算子に応じて計算する関数
    ****************************************************/
-  public handleEqual(): void {
+  private handleEqual(): void {
     switch (this.state) {
       /**
        * 初期状態または入力中
@@ -271,7 +269,7 @@ export class Calculator {
           /**
            * 共通の計算処理（通常計算処理 と 「=」連続対応）
            */
-          this.performEvaluation(PRE_NUMBER, this.operator as Operation, CURRENT_NUMBER);
+          this.handleEvaluation(PRE_NUMBER, this.operator as Operation, CURRENT_NUMBER);
 
           // return;
 
@@ -300,7 +298,7 @@ export class Calculator {
           /**
            * 共通の計算処理（通常計算処理 と 「=」連続対応）
            */
-          this.performEvaluation(Number(this.left), this.lastOperator, this.lastResult);
+          this.handleEvaluation(Number(this.left), this.lastOperator, this.lastResult);
 
           // return;
 
@@ -320,6 +318,7 @@ export class Calculator {
         // なぜ: ２つ目の数字が入力されていないので計算できないため　/ 前提条件: 一つ目の数字 と 演算子 のみ入力されている時
         if (!this.buffer.hasValue() && this.operator) {
           this.display.renderError(Config.ERROR_MESSAGE);
+          this.historyClear();
           this.state = CalcState.Error;
           return;
         }
@@ -327,17 +326,20 @@ export class Calculator {
         return;
       }
 
+      default:
+        return;
+
     } // switch の締め }
   }   // handleEqual() の締め }
 
   /*****************************************************
-   * @file typesc/
+   * @file calculator-class/
    * @date 2025/11/15
    * @param なし(void)
    * @return なし
    * @detail 表示画面をクリアにする関数
    ****************************************************/
-  public handleClear(): void {
+  private handleClear(): void {
     // 初期化
     this.buffer.clear();   // 元currentInput
     this.left = null;      // 元preInput     
@@ -348,14 +350,12 @@ export class Calculator {
       result.textContent = Config.NUMBER_ZERO;
     }
 
-    this.display.displayHistoryOne(this.buffer.clear());
-    this.display.displayHistoryOperator(this.buffer.clear());
-    this.display.displayHistoryTwo(this.buffer.clear());
+    this.historyClear();
     this.state = CalcState.Ready;
   }
 
   /*********************************************************
-   * @file typesc/
+   * @file calculator-class/
    * @date 2025/11/15
    * @param error
    * @return なし
@@ -364,17 +364,18 @@ export class Calculator {
   public handleError(error: unknown): void {
     if (error instanceof DivisionByZeroError) {
       this.display.renderError("エラー");
+      this.historyClear();
       console.error("Division by zero detected.");
     } else {
       this.display.renderError("不明なエラー");
+      this.historyClear();
       console.error(error);
     }
     this.state = CalcState.Error;
-    // this.state = this.errorHandler.handle(error);
   }
 
   /*******************************************************************
-   * @file typesc/
+   * @file calculator-class/
    * @date 2025/11/15
    * @param left
    * @param op 
@@ -382,7 +383,7 @@ export class Calculator {
    * @return なし
    * @detail handleEqual()の共通の計算処理関数（通常計算処理 と 「=」連続対応）
    ******************************************************************/
-  public performEvaluation(left: number, op: Operation, right: number): void {
+  private handleEvaluation(left: number, op: Operation, right: number): void {
     const evaluatorResult = this.evaluator.operatorSwitch(left, op, right);
     const format = this.formatter.formatForDisplay(evaluatorResult);
 
@@ -403,6 +404,19 @@ export class Calculator {
       this.display.displayHistoryTwo(this.buffer.clear());
     }
     this.state = CalcState.ResultShown;
+  }
+
+  /*******************************************************************
+   * @file calculator-class/
+   * @date 2025/11/29
+   * @param なし(void)
+   * @return なし
+   * @detail 共通の履歴エリアのクリア関数
+   ******************************************************************/
+  private historyClear(): void {
+    this.display.displayHistoryOne(this.buffer.clear());
+    this.display.displayHistoryOperator(this.buffer.clear());
+    this.display.displayHistoryTwo(this.buffer.clear());
   }
 
 }   // class Calculator の締め }
